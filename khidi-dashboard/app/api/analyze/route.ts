@@ -140,7 +140,12 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+    const model = genAI.getGenerativeModel({
+      model: GEMINI_MODEL,
+      generationConfig: {
+        maxOutputTokens: 8192,
+      },
+    });
 
     // 채용정보인 경우 별도 프롬프트 사용
     const isJobPosting = layer === "채용정보" || category === "채용분석";
@@ -225,7 +230,12 @@ export async function GET(request: NextRequest) {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+    const model = genAI.getGenerativeModel({
+      model: GEMINI_MODEL,
+      generationConfig: {
+        maxOutputTokens: 4096,
+      },
+    });
 
     const prompt = `당신은 한국보건산업진흥원(KHIDI) 인사담당 전문가입니다.
 2025년 보건산업 백서, 디지털헬스케어 정책 동향, 바이오헬스 산업 전략을 기반으로
