@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import Sidebar from "@/components/Sidebar";
-import FilterDropdown from "@/components/FilterDropdown";
+import FilterChips from "@/components/FilterChips";
 import SearchInput from "@/components/SearchInput";
 import ArticleList from "@/components/ArticleList";
 import BackToTop from "@/components/BackToTop";
@@ -13,11 +13,8 @@ import { useFilters } from "@/hooks/useFilters";
 import { useArticleStack } from "@/hooks/useArticleStack";
 import { mockArticles, getLastUpdated } from "@/lib/mockData";
 import {
-  TYPE_OPTIONS,
   CATEGORY_OPTIONS,
   LAYER_OPTIONS,
-  REGION_OPTIONS,
-  SOURCE_OPTIONS,
 } from "@/lib/constants";
 import { ThemeType, getTheme, themes } from "@/lib/themes";
 
@@ -318,24 +315,8 @@ export default function AINewsfeed() {
             boxShadow: theme.shadows?.card || 'none',
           }}
         >
-          <div className="flex flex-wrap gap-2 mb-3">
-            <FilterDropdown
-              label="유형"
-              options={TYPE_OPTIONS}
-              selected={filters.type}
-              onChange={setTypeFilter}
-              counts={counts.type}
-              theme={theme}
-            />
-            <FilterDropdown
-              label="분류"
-              options={CATEGORY_OPTIONS}
-              selected={filters.category}
-              onChange={setCategoryFilter}
-              counts={counts.category}
-              theme={theme}
-            />
-            <FilterDropdown
+          <div className="flex flex-col gap-3 mb-3">
+            <FilterChips
               label="발행처"
               options={LAYER_OPTIONS}
               selected={filters.layer}
@@ -343,20 +324,12 @@ export default function AINewsfeed() {
               counts={counts.layer}
               theme={theme}
             />
-            <FilterDropdown
-              label="지역"
-              options={REGION_OPTIONS}
-              selected={filters.region}
-              onChange={setRegionFilter}
-              counts={counts.region}
-              theme={theme}
-            />
-            <FilterDropdown
-              label="출처"
-              options={SOURCE_OPTIONS}
-              selected={filters.source}
-              onChange={setSourceFilter}
-              counts={counts.source}
+            <FilterChips
+              label="분류"
+              options={CATEGORY_OPTIONS}
+              selected={filters.category}
+              onChange={setCategoryFilter}
+              counts={counts.category}
               theme={theme}
             />
           </div>
