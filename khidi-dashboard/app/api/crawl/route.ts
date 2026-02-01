@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
+// Edge Runtime 사용 (Vercel 서버 IP 차단 우회)
+export const runtime = "edge";
+
 // KHIDI 게시판 URL
 const KHIDI_BOARDS = {
   "보건산업브리프": "https://www.khidi.or.kr/board?menuId=MENU00085",
@@ -197,26 +200,11 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // 디버깅: 첫 번째 게시판 HTML 일부 확인
-    let debugHtml = "";
-    try {
-      const debugRes = await fetch("https://www.khidi.or.kr/board?menuId=MENU00085", {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        },
-      });
-      const html = await debugRes.text();
-      debugHtml = html.slice(0, 2000); // 처음 2000자만
-    } catch (e) {
-      debugHtml = "fetch error";
-    }
-
     return NextResponse.json({
       success: true,
       count: formattedArticles.length,
       articles: formattedArticles,
       crawledAt: new Date().toISOString(),
-      debug: debugHtml,
     });
   } catch (error) {
     console.error("Crawl error:", error);
