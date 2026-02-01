@@ -106,8 +106,10 @@ export default function AINewsfeed() {
         alert(`${newCount}개의 브리핑을 수집했습니다.`);
       } else if (data.error) {
         alert(`크롤링 실패: ${data.error}`);
+      } else if (data.success && data.count === 0) {
+        alert("새로운 브리핑이 없습니다.");
       } else {
-        alert("새로운 브리핑이 없거나 크롤링에 실패했습니다.");
+        alert("크롤링에 실패했습니다. 잠시 후 다시 시도해주세요.");
       }
     } catch (error) {
       console.error("Crawl error:", error);
