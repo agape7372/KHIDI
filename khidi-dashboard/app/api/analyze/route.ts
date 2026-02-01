@@ -1,37 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Gemini 모델명 (2.5-flash는 무료 할당량 있음, 2.0-flash는 무료 할당량 0)
+// Gemini 모델명
 const GEMINI_MODEL = "gemini-2.5-flash";
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { title, content, apiKey: clientApiKey } = body;
+// 채용정보 분석 프롬프트
+function getJobPostingPrompt(title: string, content: string): string {
+  return `당신은 한국보건산업진흥원(KHIDI) 채용에 지원하려는 취업준비생을 돕는 취업 컨설턴트입니다.
+아래 채용공고를 분석하여 지원 준비에 필요한 핵심 정보를 정리해주세요.
 
-    // 환경 변수 또는 클라이언트에서 전달받은 키 사용
-    const apiKey = process.env.GEMINI_API_KEY || clientApiKey;
+[채용공고 제목]: ${title}
 
-    if (!apiKey) {
-      return NextResponse.json(
-        { success: false, error: "Gemini API 키가 필요합니다. 설정에서 API 키를 입력해주세요." },
-        { status: 400 }
-      );
-    }
+[채용공고 내용]:
+${content.slice(0, 10000)}
 
-    if (!content || content.length < 50) {
-      return NextResponse.json(
-        { success: false, error: `분석할 내용이 충분하지 않습니다. (현재: ${content?.length || 0}자, 최소: 50자)` },
-        { status: 400 }
-      );
-    }
+---
 
-    // Gemini API 초기화
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+## 📋 채용 개요
+| 항목 | 내용 |
+|------|------|
+| 채용 직무 | (직무명) |
+| 채용 인원 | (명) |
+| 고용 형태 | (정규직/계약직/인턴 등) |
+| 근무 지역 | (지역) |
+| 접수 기간 | (기간) |
 
-    // 인바스켓 형식 프롬프트
-    const prompt = `당신은 한국보건산업진흥원(KHIDI) 입사 시험 '인바스켓(In-Basket)'을 준비하는 수험생입니다.
+## ✅ 지원 자격
+### 필수 요건
+- (학력, 전공, 경력 등)
+
+### 우대 사항
+- (자격증, 경험, 역량 등)
+
+## 📝 전형 절차
+1. (1단계)
+2. (2단계)
+3. (3단계)
+
+## 💼 주요 업무
+- (담당하게 될 업무 내용)
+
+## 🎯 합격 준비 전략
+
+### 서류 전형 TIP
+- (자기소개서/이력서 작성 팁)
+
+### 면접 준비 TIP
+- (예상 질문 및 준비 방법)
+
+### 이 직무에서 원하는 인재상
+- (채용공고에서 파악되는 핵심 역량)
+
+---
+한국어로 작성하고, 채용공고에 명시된 내용을 기반으로 정확하게 작성하세요.
+공고에 없는 정보는 "공고 확인 필요"로 표시하세요.`;
+}
+
+// 인바스켓(브리핑) 분석 프롬프트
+function getInBasketPrompt(title: string, content: string): string {
+  return `당신은 한국보건산업진흥원(KHIDI) 입사 시험 '인바스켓(In-Basket)'을 준비하는 수험생입니다.
 아래 보건산업 관련 자료를 꼼꼼히 읽고, 실제 시험에서 고득점을 받을 수 있는 답안을 작성하세요.
 
 [자료 제목]: ${title}
@@ -89,6 +116,37 @@ ${content.slice(0, 10000)}
 ---
 답변은 한국어로 작성하고, 실제 KHIDI 직원이 작성한 것처럼 전문적이고 구체적으로 작성하세요.
 불릿 포인트는 반드시 "-"로 시작하세요.`;
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { title, content, apiKey: clientApiKey, category, layer } = body;
+
+    const apiKey = process.env.GEMINI_API_KEY || clientApiKey;
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: "Gemini API 키가 필요합니다. 설정에서 API 키를 입력해주세요." },
+        { status: 400 }
+      );
+    }
+
+    if (!content || content.length < 50) {
+      return NextResponse.json(
+        { success: false, error: `분석할 내용이 충분하지 않습니다. (현재: ${content?.length || 0}자, 최소: 50자)` },
+        { status: 400 }
+      );
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+
+    // 채용정보인 경우 별도 프롬프트 사용
+    const isJobPosting = layer === "채용정보" || category === "채용분석";
+    const prompt = isJobPosting
+      ? getJobPostingPrompt(title, content)
+      : getInBasketPrompt(title, content);
 
     const result = await model.generateContent(prompt);
     const response = result.response;
@@ -113,6 +171,7 @@ ${content.slice(0, 10000)}
       success: true,
       analysis,
       analyzedAt: new Date().toISOString(),
+      type: isJobPosting ? "job" : "briefing",
     });
   } catch (error: unknown) {
     console.error("Analysis error:", error);

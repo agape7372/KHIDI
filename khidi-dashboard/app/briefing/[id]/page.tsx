@@ -71,7 +71,9 @@ export default function BriefingDetailPage() {
         body: JSON.stringify({
           title: articleData.title,
           content: contentToAnalyze,
-          apiKey: apiKey || undefined, // 서버에서 환경 변수 사용하도록
+          apiKey: apiKey || undefined,
+          category: articleData.category,
+          layer: articleData.tags?.layer,
         }),
       });
 

@@ -106,6 +106,8 @@ export default function ArticleCard({ article, apiKey, theme: propTheme }: Artic
           title: article.title,
           content: article.summary,
           apiKey,
+          category: article.category,
+          layer: article.tags?.layer,
         }),
       });
 
