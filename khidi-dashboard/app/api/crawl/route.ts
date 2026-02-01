@@ -107,14 +107,14 @@ async function crawlArticleDetail(url: string): Promise<{ content: string; pdfUr
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // 본문 내용 추출
+    // 본문 내용 추출 (KHIDI 사이트 구조에 맞게)
     const contentSelectors = [
+      ".viewContent",
       ".board-view-content",
       ".view-content",
       ".bbs-view-content",
-      ".content",
+      "#content .content",
       "article",
-      ".post-content",
     ];
 
     let content = "";
@@ -171,13 +171,14 @@ export async function GET(request: NextRequest) {
       allArticles.push(...articles);
     }
 
-    // 상세 내용 크롤링 (옵션)
+    // 상세 내용 크롤링 (옵션) - 병렬 처리로 속도 개선
     if (withDetail && allArticles.length > 0) {
-      for (const article of allArticles.slice(0, 5)) {
+      const detailPromises = allArticles.map(async (article) => {
         const detail = await crawlArticleDetail(article.url);
         article.content = detail.content;
         article.pdfUrl = detail.pdfUrl;
-      }
+      });
+      await Promise.all(detailPromises);
     }
 
     // 결과를 Article 형식으로 변환
