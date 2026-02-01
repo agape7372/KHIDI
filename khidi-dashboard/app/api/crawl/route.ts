@@ -23,7 +23,10 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
   try {
     const response = await fetch(boardUrl, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Cache-Control": "no-cache",
       },
     });
 
@@ -36,23 +39,30 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
     const $ = cheerio.load(html);
     const articles: CrawledArticle[] = [];
 
-    // KHIDI 게시판 구조에 맞게 파싱
-    $("table tbody tr, .board-list li, .list-item, .bbs-list tbody tr").each((index, element) => {
+    // KHIDI 게시판: table 구조 (번호, 분류, 제목, 등록일, 조회수, 첨부)
+    $("table tbody tr").each((index, element) => {
       if (index >= 10) return; // 최대 10개만
 
       const $row = $(element);
-      const $titleLink = $row.find("a").first();
+      const $cells = $row.find("td");
+
+      // 최소 4개 이상의 셀이 있어야 유효한 행
+      if ($cells.length < 4) return;
+
+      // 제목은 보통 3번째 셀(index 2)에 있음
+      const $titleCell = $cells.eq(2);
+      const $titleLink = $titleCell.find("a").first();
       const title = $titleLink.text().trim();
 
-      if (!title) return;
+      if (!title || title.length < 2) return;
 
       let link = $titleLink.attr("href") || "";
       if (link && !link.startsWith("http")) {
         link = `https://www.khidi.or.kr${link}`;
       }
 
-      // 날짜 추출
-      const dateText = $row.find(".date, .regdate, td:nth-child(4), td:nth-child(5)").text().trim();
+      // 날짜는 4번째 셀(index 3)
+      const dateText = $cells.eq(3).text().trim();
       const dateMatch = dateText.match(/\d{4}[-./]\d{2}[-./]\d{2}/) ||
                        dateText.match(/\d{2}[-./]\d{2}[-./]\d{2}/);
       const date = dateMatch ? dateMatch[0].replace(/-/g, ".") : new Date().toISOString().slice(0, 10).replace(/-/g, ".");
