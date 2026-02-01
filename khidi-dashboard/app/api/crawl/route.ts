@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 
-// Edge Runtime 사용 (Vercel 서버 IP 차단 우회)
-export const runtime = "edge";
-
 // KHIDI 게시판 URL
 const KHIDI_BOARDS = {
   "보건산업브리프": "https://www.khidi.or.kr/board?menuId=MENU00085",
-  "글로벌보건산업동향": "https://www.khidi.or.kr/board?menuId=MENU00949",
-  "뉴스레터": "https://www.khidi.or.kr/board?menuId=MENU00094",
+  "보도자료": "https://www.khidi.or.kr/board?menuId=MENU00100",
+  "채용정보": "https://www.khidi.or.kr/board?menuId=MENU00109",
+};
+
+// 공통 헤더
+const FETCH_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+  "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+  "Cache-Control": "no-cache",
 };
 
 interface CrawledArticle {
@@ -24,17 +29,10 @@ interface CrawledArticle {
 // 게시판 크롤링
 async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledArticle[]> {
   try {
-    const response = await fetch(boardUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Cache-Control": "no-cache",
-      },
-    });
+    const response = await fetch(boardUrl, { headers: FETCH_HEADERS });
 
     if (!response.ok) {
-      console.error(`Failed to fetch ${boardName}: ${response.status}`);
+      console.error(`[${boardName}] 요청 실패: ${response.status}`);
       return [];
     }
 
@@ -42,9 +40,9 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
     const $ = cheerio.load(html);
     const articles: CrawledArticle[] = [];
 
-    // KHIDI 게시판: table 구조 (번호, 분류, 제목, 등록일, 조회수, 첨부)
+    // KHIDI 게시판: 구조가 게시판마다 다름 - 유연하게 처리
     $("table tbody tr").each((index, element) => {
-      if (index >= 10) return; // 최대 10개만
+      if (index >= 10) return; // 게시판당 최대 10개
 
       const $row = $(element);
       const $cells = $row.find("td");
@@ -52,23 +50,34 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
       // 최소 4개 이상의 셀이 있어야 유효한 행
       if ($cells.length < 4) return;
 
-      // 제목은 보통 3번째 셀(index 2)에 있음
-      const $titleCell = $cells.eq(2);
-      const $titleLink = $titleCell.find("a").first();
-      const title = $titleLink.text().trim();
+      // 제목: a 태그가 있는 셀에서 찾기 (게시판마다 위치가 다름)
+      let title = "";
+      let link = "";
+      $cells.each((_, cell) => {
+        const $cell = $(cell);
+        const $link = $cell.find("a").first();
+        const text = $link.text().trim();
+        // 제목은 보통 10자 이상, 숫자만 있는 건 제외
+        if (text && text.length >= 5 && !/^\d+$/.test(text)) {
+          title = text;
+          link = $link.attr("href") || "";
+          return false; // break
+        }
+      });
 
-      if (!title || title.length < 2) return;
+      if (!title) return;
 
-      let link = $titleLink.attr("href") || "";
       if (link && !link.startsWith("http")) {
         link = `https://www.khidi.or.kr${link}`;
       }
 
-      // 날짜는 4번째 셀(index 3)
-      const dateText = $cells.eq(3).text().trim();
-      const dateMatch = dateText.match(/\d{4}[-./]\d{2}[-./]\d{2}/) ||
-                       dateText.match(/\d{2}[-./]\d{2}[-./]\d{2}/);
-      const date = dateMatch ? dateMatch[0].replace(/-/g, ".") : new Date().toISOString().slice(0, 10).replace(/-/g, ".");
+      // 날짜: 전체 행에서 날짜 패턴 찾기
+      const rowText = $row.text();
+      const dateMatch = rowText.match(/\d{4}[-./]\d{2}[-./]\d{2}/) ||
+                       rowText.match(/\d{2}[-./]\d{2}[-./]\d{2}/);
+      const date = dateMatch
+        ? dateMatch[0].replace(/-/g, ".")
+        : new Date().toISOString().slice(0, 10).replace(/-/g, ".");
 
       articles.push({
         id: `${boardName}-${index}-${Date.now()}`,
@@ -81,7 +90,7 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
 
     return articles;
   } catch (error) {
-    console.error(`Error crawling ${boardName}:`, error);
+    console.error(`[${boardName}] 크롤링 오류:`, error);
     return [];
   }
 }
@@ -89,11 +98,7 @@ async function crawlBoard(boardName: string, boardUrl: string): Promise<CrawledA
 // 게시글 상세 내용 크롤링
 async function crawlArticleDetail(url: string): Promise<{ content: string; pdfUrl?: string }> {
   try {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      },
-    });
+    const response = await fetch(url, { headers: FETCH_HEADERS });
 
     if (!response.ok) {
       return { content: "" };
@@ -133,7 +138,7 @@ async function crawlArticleDetail(url: string): Promise<{ content: string; pdfUr
 
     return { content: content.slice(0, 5000), pdfUrl };
   } catch (error) {
-    console.error("Error crawling article detail:", error);
+    console.error("상세 크롤링 오류:", error);
     return { content: "" };
   }
 }
@@ -168,7 +173,7 @@ export async function GET(request: NextRequest) {
 
     // 상세 내용 크롤링 (옵션)
     if (withDetail && allArticles.length > 0) {
-      for (const article of allArticles.slice(0, 5)) { // 처음 5개만
+      for (const article of allArticles.slice(0, 5)) {
         const detail = await crawlArticleDetail(article.url);
         article.content = detail.content;
         article.pdfUrl = detail.pdfUrl;
@@ -180,15 +185,14 @@ export async function GET(request: NextRequest) {
       const category = categorizeArticle(article.title, article.content || "");
       return {
         id: article.id,
-        source: article.source === "보건산업브리프" ? "KHIDI" :
-                article.source === "글로벌보건산업동향" ? "KHIDI" : "KHIDI",
+        source: "KHIDI",
         date: article.date,
         title: article.title,
         summary: article.content?.slice(0, 200) || "내용을 불러오는 중...",
         link: article.url,
         isNew: index < 3,
-        category, // 최상위 레벨에도 카테고리 추가
-        content: article.content, // 전체 내용 추가
+        category,
+        content: article.content,
         pdfUrl: article.pdfUrl,
         tags: {
           type: "브리핑",
@@ -207,7 +211,7 @@ export async function GET(request: NextRequest) {
       crawledAt: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Crawl error:", error);
+    console.error("크롤링 오류:", error);
     return NextResponse.json(
       { success: false, error: "크롤링 중 오류가 발생했습니다." },
       { status: 500 }
