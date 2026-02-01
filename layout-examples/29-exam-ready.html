@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>29. Exam Ready - KHIDI 브리핑</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body { font-family: 'Pretendard', sans-serif; font-size: 13px; }
+    html { scroll-behavior: smooth; }
+    .template-box { border-left: 3px solid #6366f1; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-60 bg-white border-r border-gray-200 sticky top-0 h-screen overflow-y-auto">
+      <div class="p-4 border-b border-gray-100">
+        <a href="index.html" class="text-xs text-gray-400 hover:text-gray-600">← 목록</a>
+        <div class="flex items-center gap-2 mt-3">
+          <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">R&D정책</span>
+          <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">NEW</span>
+        </div>
+        <h1 class="font-bold text-gray-900 mt-2 text-sm leading-tight">보건의료 R&D 예산 1조원 돌파</h1>
+        <p class="text-xs text-gray-500 mt-1">2026.01.21</p>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="p-3 space-y-1">
+        <div class="text-[10px] text-gray-400 font-medium px-2 mb-2">브리핑 내용</div>
+        <a href="#overview" class="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-xs font-medium">
+          <span>📊</span> 개요
+        </a>
+        <a href="#situation" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 text-xs">
+          <span>📋</span> 현황 분석
+        </a>
+        <a href="#problems" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 text-xs">
+          <span>⚠️</span> 문제점
+        </a>
+        <a href="#solutions" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 text-xs">
+          <span>💡</span> 해결방안
+        </a>
+        <a href="#effects" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50 text-xs">
+          <span>📈</span> 기대효과
+        </a>
+
+        <div class="text-[10px] text-gray-400 font-medium px-2 mt-4 mb-2">시험 대비</div>
+        <a href="#template1" class="flex items-center gap-2 px-3 py-2 rounded-lg text-purple-600 hover:bg-purple-50 text-xs">
+          <span>★</span> 기획안 템플릿
+        </a>
+        <a href="#template2" class="flex items-center gap-2 px-3 py-2 rounded-lg text-purple-600 hover:bg-purple-50 text-xs">
+          <span>★</span> 문제점/해결방안 템플릿
+        </a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="p-3 border-t border-gray-100 mt-auto">
+        <button class="w-full px-3 py-2 bg-gray-900 text-white rounded-lg text-xs hover:bg-gray-800 mb-2">저장하기</button>
+        <button class="w-full px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-xs hover:bg-gray-200">공유하기</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 max-w-4xl">
+      <!-- Overview Section -->
+      <section id="overview" class="mb-8">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">보건의료 R&D 예산 1조원 돌파</h2>
+        <p class="text-gray-600 mb-4">디지털헬스케어 중점 투자 - 역대 최대 규모</p>
+
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
+            <div class="text-2xl font-bold text-gray-900">1조600억</div>
+            <div class="text-xs text-gray-500 mt-1">총 예산</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
+            <div class="text-2xl font-bold text-green-600">+23%</div>
+            <div class="text-xs text-gray-500 mt-1">전년 대비 증가율</div>
+          </div>
+          <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
+            <div class="text-2xl font-bold text-blue-600">3개</div>
+            <div class="text-xs text-gray-500 mt-1">중점 투자 분야</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 현황 분석 Section -->
+      <section id="situation" class="mb-8 scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg">📋</span>
+          <h3 class="text-lg font-bold text-gray-900">현황 분석</h3>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div class="divide-y divide-gray-100">
+            <div class="p-4 flex gap-4">
+              <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">01</span>
+              <div>
+                <div class="font-semibold text-gray-900">예산 규모</div>
+                <p class="text-gray-600 mt-1">1조 600억 원으로 전년 대비 23% 증가하여 역대 최대 규모 달성. 보건의료 R&D에 대한 정부의 전략적 투자 의지를 반영함.</p>
+              </div>
+            </div>
+            <div class="p-4 flex gap-4">
+              <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">02</span>
+              <div>
+                <div class="font-semibold text-gray-900">중점 분야</div>
+                <p class="text-gray-600 mt-1">디지털헬스케어, 바이오의약품, 필수의료 3개 분야에 집중 투자. 4차 산업혁명 시대의 보건산업 경쟁력 강화 목표.</p>
+              </div>
+            </div>
+            <div class="p-4 flex gap-4">
+              <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center font-bold text-sm shrink-0">03</span>
+              <div>
+                <div class="font-semibold text-gray-900">정책 방향</div>
+                <p class="text-gray-600 mt-1">기술 자립화 및 글로벌 경쟁력 강화를 통한 보건산업 생태계 구축. 수입 의존도 감소 및 수출 확대 추진.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 문제점 Section -->
+      <section id="problems" class="mb-8 scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg">⚠️</span>
+          <h3 class="text-lg font-bold text-gray-900">문제점</h3>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-amber-600 text-lg">👥</span>
+            </div>
+            <div class="font-semibold text-amber-800 mb-2">인력 부족</div>
+            <p class="text-sm text-amber-700">R&D 전문인력 수급 불균형이 심화되고 있습니다. 특히 AI·바이오 융합 분야 인재가 절대적으로 부족합니다.</p>
+          </div>
+          <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-amber-600 text-lg">🔒</span>
+            </div>
+            <div class="font-semibold text-amber-800 mb-2">규제 장벽</div>
+            <p class="text-sm text-amber-700">신기술에 대한 인허가 체계 정비가 시급합니다. 현행 규제 체계가 혁신 속도를 따라가지 못하고 있습니다.</p>
+          </div>
+          <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center mb-3">
+              <span class="text-amber-600 text-lg">🌍</span>
+            </div>
+            <div class="font-semibold text-amber-800 mb-2">글로벌 경쟁</div>
+            <p class="text-sm text-amber-700">미국, 중국 등 주요국 대비 투자 규모가 여전히 부족합니다. 기술 격차 해소를 위한 추가 투자가 필요합니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 해결방안 Section -->
+      <section id="solutions" class="mb-8 scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg">💡</span>
+          <h3 class="text-lg font-bold text-gray-900">해결방안</h3>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white rounded-xl p-4 border-l-4 border-green-500">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded">단기</span>
+              <span class="font-semibold text-gray-900">산학협력 확대</span>
+            </div>
+            <p class="text-gray-600 text-sm">규제 샌드박스를 활용하여 신기술 실증 기회 확대. 대학·연구소와 기업 간 공동 R&D 프로젝트 추진.</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 border-l-4 border-green-500">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded">중기</span>
+              <span class="font-semibold text-gray-900">인력양성 체계 구축</span>
+            </div>
+            <p class="text-gray-600 text-sm">인허가 절차 간소화 및 전문인력 양성 프로그램 확대. 해외 우수 인재 유치를 위한 지원제도 마련.</p>
+          </div>
+          <div class="bg-white rounded-xl p-4 border-l-4 border-green-500">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-bold rounded">장기</span>
+              <span class="font-semibold text-gray-900">생태계 자립화</span>
+            </div>
+            <p class="text-gray-600 text-sm">글로벌 경쟁력을 갖춘 보건산업 생태계 구축. 핵심 기술 국산화 및 해외 시장 진출 기반 마련.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 기대효과 Section -->
+      <section id="effects" class="mb-8 scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg">📈</span>
+          <h3 class="text-lg font-bold text-gray-900">2030 기대효과</h3>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-4">
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">디지털헬스 시장 규모</span>
+                <span class="font-bold text-violet-600">30조 원</span>
+              </div>
+              <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-violet-500 rounded-full" style="width:90%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">바이오 수출액</span>
+                <span class="font-bold text-blue-600">$100억</span>
+              </div>
+              <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 rounded-full" style="width:70%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-medium text-gray-700">일자리 창출</span>
+                <span class="font-bold text-emerald-600">50만 개</span>
+              </div>
+              <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width:60%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 기획안 템플릿 Section -->
+      <section id="template1" class="mb-8 scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg text-purple-600">★</span>
+          <h3 class="text-lg font-bold text-purple-800">기획안 작성 템플릿</h3>
+          <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] rounded">시험대비</span>
+        </div>
+
+        <div class="bg-purple-50 rounded-xl border border-purple-200 p-5">
+          <div class="space-y-4">
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 사업 개요</div>
+              <p class="text-gray-600 text-sm">○ 사업명: 보건의료 R&D 투자 확대를 통한 디지털헬스케어 산업 육성 사업</p>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 추진 배경</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>○ 보건의료 R&D 예산이 1조원을 돌파하여 역대 최대 규모 달성</li>
+                <li>○ 디지털헬스케어가 미래 핵심 산업으로 부상</li>
+                <li>○ 글로벌 경쟁 심화로 기술 자립화 필요성 증대</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 추진 목적</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>○ 2030년까지 디지털헬스 시장 30조 원 규모 달성</li>
+                <li>○ 바이오 수출 $100억 목표</li>
+                <li>○ 보건산업 분야 50만 일자리 창출</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 문제점</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>○ R&D 전문인력 수급 불균형</li>
+                <li>○ 신기술 인허가 체계 정비 미흡</li>
+                <li>○ 주요국 대비 투자 규모 부족</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 해결방안</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>○ 산학협력 확대 및 규제 샌드박스 활용</li>
+                <li>○ 전문인력 양성 체계 구축</li>
+                <li>○ 글로벌 경쟁력 강화를 위한 생태계 자립화</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 사업 내용</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>○ 디지털헬스케어·바이오의약품·필수의료 3개 분야 집중 투자</li>
+                <li>○ 해외 연구기관과의 협력 네트워크 구축</li>
+                <li>○ 인력양성 가이드라인 수립 및 실습시설 확충</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 문제점/해결방안 템플릿 Section -->
+      <section id="template2" class="scroll-mt-4">
+        <div class="flex items-center gap-2 mb-4">
+          <span class="text-lg text-purple-600">★</span>
+          <h3 class="text-lg font-bold text-purple-800">문제점 및 해결방안 템플릿</h3>
+          <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-[10px] rounded">시험대비</span>
+        </div>
+
+        <div class="bg-purple-50 rounded-xl border border-purple-200 p-5">
+          <div class="space-y-4">
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 현황</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>- 보건의료 R&D 예산 1조 600억 원 (전년 대비 23% 증가)</li>
+                <li>- 디지털헬스케어, 바이오의약품, 필수의료 3개 분야 중점 투자</li>
+                <li>- 기술 자립화 및 글로벌 경쟁력 강화 추진</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 문제점</div>
+              <ul class="text-gray-600 text-sm space-y-1">
+                <li>- R&D 전문인력 수급 불균형 심화</li>
+                <li>- 신기술에 대한 인허가 체계 정비 지연</li>
+                <li>- 미국, 중국 등 주요국 대비 투자 규모 부족</li>
+              </ul>
+            </div>
+            <div class="template-box bg-white rounded-lg p-4">
+              <div class="font-bold text-purple-700 mb-2">◎ 해결방안</div>
+              <ul class="text-gray-600 text-sm space-y-2">
+                <li>
+                  <span class="text-green-600 font-medium">○ 단기:</span> 산학협력 확대, 규제 샌드박스 활용
+                </li>
+                <li>
+                  <span class="text-green-600 font-medium">○ 중기:</span> 인력양성 체계 구축, 인허가 절차 간소화
+                </li>
+                <li>
+                  <span class="text-green-600 font-medium">○ 장기:</span> 생태계 자립화, 글로벌 경쟁력 확보
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <div class="mt-8 pt-4 border-t border-gray-200 flex justify-between items-center text-xs text-gray-400">
+        <div>출처: 보건복지부 | KHIDI AI 분석</div>
+        <a href="#" class="text-blue-600 hover:underline">원문 보기 →</a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
